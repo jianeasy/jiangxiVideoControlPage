@@ -1,0 +1,22 @@
+.container {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+}
+.bar {
+  width: 15vw;
+  height: 5vw;
+  position: absolute;
+  top: 5vw;
+  left: 5vw;
+  background-color: rgb(224, 243, 243);
+  z-index: 1000;
+  border-radius: 10px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: row;
+  padding: 0 1rem;
+  font-size: 1rem;
+  // font-weight: bolder;
+}
