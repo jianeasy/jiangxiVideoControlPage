@@ -28,12 +28,12 @@ export default () => {
           return {
             name: item.properties.name,
             value: item.properties.adcode,
-           // selected: item.properties.name === selectedRegion,
+
             itemStyle: {
               normal: {
                 areaColor: color[item.properties.name],
                 emphasis: {
-                  areaColor: "red",
+                  areaColor: 'red',
                   borderColor: 'red',
                 },
               },
@@ -48,16 +48,6 @@ export default () => {
             show: true,
           },
         },
-        // itemStyle: {
-        //   normal: {
-        //     areaColor: 'red',
-        //     borderColor: 'red',
-        //   },
-        //   emphasis: {
-        //     areaColor: 'red',
-        //     borderColor: 'red',
-        //   },
-        // },
       },
     ],
   };

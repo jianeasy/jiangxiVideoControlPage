@@ -1,57 +1,34 @@
-import React, { useEffect } from 'react';
-import ECharts from 'echarts-for-react';
-import * as echarts from 'echarts';
-import { data as geoJsonData } from './geoJsonData';
-echarts.registerMap('宜春市', geoJsonData);
+import { MutableRefObject, useEffect, useRef } from 'react';
+// import ECharts from 'echarts-for-react';
+import * as Echarts from 'echarts';
+type EChartsOption = echarts.EChartsOption;
 
-// 自适应的ECharts函数组件
-const ResponsiveEcharts = ({ options, onClick }) => {
-  useEffect(() => {
-    const resizeChart = () => {
-      if (chartRef && chartRef.getEchartsInstance()) {
-        chartRef.getEchartsInstance().resize();
-      }
+// import * as echarts from 'echarts';
+import { data as geoJsonData } from './geoJsonData';
+Echarts.registerMap('宜春市', geoJsonData);
+export const ResponsiveEcharts = (props) => {
+  const { options, onClick } = props;
+  // 自适应的ECharts函数组件
+  // const ResponsiveEcharts = ({ options, onClick }) => {
+  const chart: MutableRefObject<any> = useRef(null);
+  const chartInit = () => {
+    const mychar = Echarts.init(chart.current);
+    mychar.setOption(options, true);
+    mychar.on('click', onClick);
+    window.onresize = () => {
+      mychar.resize();
     };
-    // chartRef.on('click', function (params) {
-    //   if (params.componentType === 'series') {
-    //     console.log('点击的系列名称：', params.seriesName);
-    //     console.log('点击的区域名称：', params.name);
-    //     onClick(params);
-    //   }
-    // });
-    window.addEventListener('resize', resizeChart);
+  };
+
+  useEffect(() => {
+    chartInit();
+
     return () => {
-      window.removeEventListener('resize', resizeChart);
+      window.onresize = null;
     };
   }, []);
-  let chartRef;
 
-  return (
-    <div style={{ width: '100%', height: '100%' }}>
-      <ECharts
-        ref={(e) => {
-          chartRef = e;
-        }}
-        onEvents={{
-          click: (params) => {
-            console.log(params);
-            echarts.dispatchAction &&
-            echarts.dispatchAction({
-              type: 'select',
-              seriesIndex: params.dataIndex, // 确保这是你地图系列的正确索引
-              name: params.name,
-            });
-            onClick(params);
-           
-          },
-         
-        }}
-        echarts={echarts}
-        option={options}
-        style={{ width: '100%', height: '100%' }}
-      />
-    </div>
-  );
+  return <div ref={chart} style={{ width: '100%', height: '100%' }}></div>;
 };
 
 export default ResponsiveEcharts;
