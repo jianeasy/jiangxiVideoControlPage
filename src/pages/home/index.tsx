@@ -1,77 +1,51 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styles from './index.module.scss';
-import EchartsComponent from '@/components/EchartsComponent';
-import { data as geoJsonData } from '@/components/EchartsComponent/geoJsonData';
-
+import { Outlet, useNavigate } from 'react-router-dom';
+import cn from 'classnames';
 export default () => {
-  const [selectedRegion, setSelectedRegion] = useState('无');
-  const color = {
-    袁州区: '#b6c4fc',
-    铜鼓县: '#fcc4c0',
-    万载县: '#b3edfc',
-    上高县: '#c0fcb8',
-    宜丰县: '#fcbbf4',
-    靖安县: '#c0fcf4',
-    奉新县: '#fcd7c2',
-    高安市: '#b3fcde',
-    樟树市: '#d9fcc7',
-    丰城市: '#fcf4d7',
-  };
-  const option = {
-    series: [
-      {
-        name: '区县地图',
-        type: 'map',
-        map: '宜春市',
-        roam: true,
-        data: geoJsonData.features.map((item) => {
-          return {
-            name: item.properties.name,
-            value: item.properties.adcode,
-
-            itemStyle: {
-              normal: {
-                areaColor: color[item.properties.name],
-                emphasis: {
-                  areaColor: 'red',
-                  borderColor: 'red',
-                },
-              },
-            },
-          };
-        }),
-        label: {
-          normal: {
-            show: true,
-          },
-          emphasis: {
-            show: true,
-          },
-        },
-      },
-    ],
-  };
-  const handleClick = (params) => {
-    if (params.componentType === 'series') {
-      console.log('点击的系列名称：', params.seriesName);
-      console.log('点击的区域名称：', params.name);
-      setSelectedRegion(params.name);
-    }
+  const navigate = useNavigate();
+  const list = [
+    {
+      title: '光雕投影',
+      name: 'map',
+    },
+    {
+      title: '滑轨屏',
+      name: 'video',
+    },
+    {
+      title: 'Cave影片',
+      name: 'cave',
+    },
+  ];
+  const [activeMenu, setActiveMenu] = useState(list[0]);
+  const handleSelect = (item) => {
+    setActiveMenu(item);
+    navigate(item.name);
   };
   return (
     <div className={styles.container}>
-      <Bar regionName={selectedRegion} />
-      <EchartsComponent options={option} onClick={handleClick} />
-    </div>
-  );
-};
-
-export const Bar = (pr0ps) => {
-  const { regionName } = pr0ps;
-  return (
-    <div className={styles.bar}>
-      <span>当前选中区域：</span>
-      <span>{regionName}</span>
+      <div className={styles.leftSide}>
+        {list.map((item) => {
+          return (
+            <div
+              className={cn(
+                styles.item,
+                activeMenu.name === item.name ? styles.activeItem : ''
+              )}
+              key={item.name}
+              onClick={() => {
+                handleSelect(item);
+              }}
+            >
+              {item.title}
+            </div>
+          );
+        })}
+      </div>
+      <div className={styles.content}>
+        <Outlet />
+      </div>
     </div>
   );
 };
