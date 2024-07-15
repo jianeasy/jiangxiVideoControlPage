@@ -1,11 +1,10 @@
-import { MutableRefObject, useEffect, useRef } from 'react';
+import { MutableRefObject, useEffect, useRef } from "react";
 // import ECharts from 'echarts-for-react';
-import * as Echarts from 'echarts';
-type EChartsOption = echarts.EChartsOption;
+import * as Echarts from "echarts";
 
 // import * as echarts from 'echarts';
-import { data as geoJsonData } from './geoJsonData';
-Echarts.registerMap('宜春市', geoJsonData);
+import { data as geoJsonData } from "./geoJsonData";
+Echarts.registerMap("宜春市", geoJsonData);
 export const ResponsiveEcharts = (props) => {
   const { options, onClick } = props;
   // 自适应的ECharts函数组件
@@ -14,7 +13,7 @@ export const ResponsiveEcharts = (props) => {
   const chartInit = () => {
     const mychar = Echarts.init(chart.current);
     mychar.setOption(options, true);
-    mychar.on('click', onClick);
+    mychar.on("click", onClick);
     window.onresize = () => {
       mychar.resize();
     };
@@ -28,7 +27,7 @@ export const ResponsiveEcharts = (props) => {
     };
   }, []);
 
-  return <div ref={chart} style={{ width: '100%', height: '100%' }}></div>;
+  return <div ref={chart} style={{ width: "100%", height: "100%" }}></div>;
 };
 
 export default ResponsiveEcharts;

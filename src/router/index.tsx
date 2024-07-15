@@ -8,6 +8,7 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <Home />,
+    
     children: [
       {
         path: 'map',
@@ -23,5 +24,7 @@ const router = createBrowserRouter([
       },
     ],
   },
-]);
+], {
+  basename: '/videoMapControlPage',
+});
 export default router;
