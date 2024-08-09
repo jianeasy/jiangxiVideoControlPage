@@ -5,6 +5,7 @@ import * as Echarts from "echarts";
 // import * as echarts from 'echarts';
 import { data as geoJsonData } from "./geoJsonData";
 Echarts.registerMap("宜春市", geoJsonData);
+
 export const ResponsiveEcharts = (props) => {
   const { options, onClick } = props;
   // 自适应的ECharts函数组件
