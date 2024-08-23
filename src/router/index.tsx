@@ -27,11 +27,11 @@ const router = createBrowserRouter(
           element: <CaveText />,
         },
         {
-          path: "Play",
+          path: "play",
           element: <Play />,
         },
         {
-          path: "SlidingScreen",
+          path: "screen",
           element: <SlidingScreen />,
         },
       ],

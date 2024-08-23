@@ -7,19 +7,25 @@ import { data as geoJsonData } from "./geoJsonData";
 Echarts.registerMap("宜春市", geoJsonData);
 
 export const ResponsiveEcharts = (props) => {
+  console.log(1);
+
   const { options, onClick } = props;
   // 自适应的ECharts函数组件
   // const ResponsiveEcharts = ({ options, onClick }) => {
   const chart: MutableRefObject<any> = useRef(null);
+  const echarts = useRef(null);
   const chartInit = () => {
     const mychar = Echarts.init(chart.current);
+    echarts.current = mychar;
     mychar.setOption(options, true);
     mychar.on("click", onClick);
     window.onresize = () => {
       mychar.resize();
     };
   };
-
+  useEffect(() => {
+    echarts.current && echarts.current.setOption(options, true);
+  }, [options]);
   useEffect(() => {
     chartInit();
 
