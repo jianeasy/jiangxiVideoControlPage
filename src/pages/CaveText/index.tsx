@@ -1,11 +1,14 @@
 import React, { useEffect, useState, useRef } from "react";
 import styles from "./index.module.scss";
 import initWs from "../ws";
+import axios from "axios";
 let timeId;
 export default () => {
+  const videoRef = useRef(null);
+  const buttonRef = useRef(null);
   const [Ws, setWs] = useState(null);
-
-  const [text, setText] = useState("");
+  const [videoSrc, setVideoSrc] = useState("#");
+  const videoUrlRef = useRef("");
   const cache = useRef<any>({});
   const wsRef = useRef<any>(null);
   const [isConnected, setIsConnected] = useState(false);
@@ -47,8 +50,49 @@ export default () => {
 
     cache.current = { ...data };
     data = data.cave;
-    console.log("data", data);
-    setText(data.selected.name);
+    console.log(data);
+
+    if (data.mark == "done") {
+      return;
+    }
+    if (data.selected.name) {
+      if (data.command == "start_play") {
+        if (
+          videoUrlRef.current !=
+          `${import.meta.env.VITE_API_URL}/videos/${
+            data.selected.name
+          }_text.mp4`
+        ) {
+          videoUrlRef.current = `${import.meta.env.VITE_API_URL}/videos/${
+            data.selected.name
+          }_text.mp4`;
+          videoRef.current.src = `${import.meta.env.VITE_API_URL}/videos/${
+            data.selected.name
+          }_text.mp4`;
+          videoRef.current.play();
+          return;
+        }
+        videoRef.current.play();
+      } else if (data.command == "stop_play") {
+        videoRef.current.pause();
+      } else if (data.command == "resume_play") {
+        videoRef.current.currentTime = 0;
+        videoRef.current.play();
+      }
+    }
+  };
+  const snedVideoStopWsMessage = async () => {
+    const res = await axios.get(`${import.meta.env.VITE_API_URL}/getStatus`);
+    cache.current = res.data;
+    axios.post(`${import.meta.env.VITE_API_URL}/updateStatus`, {
+      ...cache.current,
+      cave: {
+        ...cache.current.cave,
+        command: "stop_play",
+        mark: "done",
+        isPlaying: false,
+      },
+    });
   };
   useEffect(() => {
     connect();
@@ -62,7 +106,19 @@ export default () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.text}>{text}</div>
+      <video
+        className={styles.videoBox}
+        ref={videoRef}
+        id="videoElement"
+        controls={false}
+        autoPlay
+        onEnded={() => {
+          console.log("Video playback has ended!");
+          snedVideoStopWsMessage();
+        }}
+      >
+        <source src={videoSrc} type="video/mp4" />
+      </video>
     </div>
   );
 };

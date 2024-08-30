@@ -55,18 +55,18 @@ export default () => {
     if (data.mark == "done") {
       return;
     }
-    if (data.name) {
+    if (data.selected.name) {
       if (data.command == "start_play") {
         if (
           videoUrlRef.current !=
-          `${import.meta.env.VITE_API_URL}/videos/${data.name}`
+          `${import.meta.env.VITE_API_URL}/videos/${data.selected.name}.mp4`
         ) {
           videoUrlRef.current = `${import.meta.env.VITE_API_URL}/videos/${
-            data.name
-          }`;
+            data.selected.name
+          }.mp4`;
           videoRef.current.src = `${import.meta.env.VITE_API_URL}/videos/${
-            data.name
-          }`;
+            data.selected.name
+          }.mp4`;
           videoRef.current.play();
           return;
         }
